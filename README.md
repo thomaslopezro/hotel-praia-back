@@ -58,11 +58,8 @@ API REST robusta para la gestión integral de un hotel. Incluye autenticación J
 ### Instalación
 
 ```bash
-# Clonar el repositorio
 git clone https://github.com/thomaslopezro/hotel-praia-back.git
 cd hotel-praia-back
-
-# Compilar e iniciar
 ./mvnw spring-boot:run
 ```
 
@@ -74,3 +71,37 @@ Disponible en `http://localhost:8080/h2-console`
 ---
 
 ## 🏗️ Arquitectura
+┌─────────────┐
+│  Frontend   │  Angular 16 (Vercel)
+└──────┬──────┘
+│ HTTP / JWT
+▼
+┌─────────────┐
+│ Controllers │  13 endpoints REST
+└──────┬──────┘
+│
+▼
+┌─────────────┐
+│  Services   │  Lógica de negocio
+└──────┬──────┘
+│
+▼
+┌─────────────┐
+│Repositories │  Spring Data JPA
+└──────┬──────┘
+│
+▼
+┌─────────────┐
+│  Database   │  H2
+└─────────────┘
+---
+
+## 👥 Equipo
+
+Proyecto desarrollado en equipo de 4 personas para la materia **Desarrollo Web** (sexto semestre) en la **Pontificia Universidad Javeriana**, bajo metodología **Scrum**.
+
+---
+
+## 📄 Contexto académico
+
+Trabajo final de la materia de Desarrollo Web — Ingeniería de Sistemas, Pontificia Universidad Javeriana.
