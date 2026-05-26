@@ -1,91 +1,76 @@
-# Sistema de Gestión de Hotel
+# Hotel Praia — Backend 🏨
 
-Esta es una aplicación web para la gestión de un hotel, construida con Spring Boot.
+API REST robusta para la gestión integral de un hotel. Incluye autenticación JWT, gestión de habitaciones, reservas, usuarios, pagos, reseñas y panel administrativo.
 
-## Características
+🔗 **Repositorio del frontend:** [hotel-praia-front](https://github.com/thomaslopezro/hotel-praia-front)
+🔗 **Demo en vivo (frontend):** [hotel-praia-front.vercel.app](https://hotel-praia-front.vercel.app/)
 
-*   **Gestión de Usuarios**: Los huéspedes pueden registrarse y gestionar sus cuentas.
-*   **Gestión de Habitaciones**: Los administradores pueden gestionar los tipos de habitación y las habitaciones individuales.
-*   **Gestión de Servicios**: Los administradores pueden gestionar los servicios ofrecidos por el hotel.
-*   **Reservas**: Los huéspedes pueden hacer reservas de habitaciones.
-*   **Facturación**: El sistema puede generar facturas para los huéspedes.
+---
 
-## Tecnologías Utilizadas
+## 🛠️ Stack Tecnológico
 
-*   **Backend**: Spring Boot, Spring Web, Spring Data JPA
-*   **Frontend**: Thymeleaf, HTML, CSS, JavaScript
-*   **Base de Datos**: H2 Database
-*   **Herramienta de Construcción**: Maven
+### Framework principal
+- **Spring Boot** + **Java**
+- **Maven** como build tool
 
-## Primeros Pasos
+### Módulos de Spring
+- **Spring Security** — autenticación y autorización
+- **Spring Data JPA** — capa de persistencia
+- **Spring Validation** — validación de datos
+- **Spring Mail** — envío de correos
+- **Spring Actuator** — monitoreo y métricas
+- **Thymeleaf** — plantillas para correos
 
-Para obtener una copia local y ponerla en marcha, sigue estos sencillos pasos.
+### Seguridad
+- **Autenticación JWT** (JSON Web Tokens)
+- Roles y permisos por usuario
+
+### Base de datos
+- **H2 Database**
+  - Archivo en desarrollo
+  - En memoria en producción
+
+### Arquitectura
+- **API REST** con 13 controllers
+- Arquitectura por capas: Controllers → Services → Repositories → Entities
+
+---
+
+## 📋 Funcionalidades
+
+- 🔐 Autenticación y autorización con JWT
+- 🏠 CRUD de habitaciones
+- 📅 Gestión de reservas con validación de disponibilidad
+- 👥 Gestión de usuarios (clientes y administradores)
+- 💳 Sistema de pagos
+- ⭐ Gestión de reseñas y calificaciones
+- 📧 Notificaciones por correo (confirmación de reservas, etc.)
+- 📊 Endpoints de monitoreo con Actuator
+
+---
+
+## 🚀 Cómo correr el proyecto
 
 ### Prerrequisitos
-
-*   JDK 17 o posterior
-*   Maven 3.6 o posterior
+- Java 17+
+- Maven 3.8+
 
 ### Instalación
 
-1.  Clona el repositorio
-    ```sh
-    git clone https://github.com/tu_usuario/Proyecto-Desarrollo-Web.git
-    ```
-2.  Navega al directorio `demo`
-    ```sh
-    cd Proyecto-Desarrollo-Web/demo
-    ```
-3.  Ejecuta la aplicación
-    ```sh
-    ./mvnw spring-boot:run
-    ```
+```bash
+# Clonar el repositorio
+git clone https://github.com/thomaslopezro/hotel-praia-back.git
+cd hotel-praia-back
 
-La aplicación estará disponible en `http://localhost:8080`.
-
-## Estructura del Proyecto
-
-El proyecto está estructurado como un proyecto estándar de Maven:
-
-```
-.
-├── demo
-│   ├── src
-│   │   ├── main
-│   │   │   ├── java
-│   │   │   │   └── com
-│   │   │   │       └── example
-│   │   │   │           └── demo
-│   │   │   │               ├── controller
-│   │   │   │               ├── entities
-│   │   │   │               ├── repository
-│   │   │   │               └── service
-│   │   │   └── resources
-│   │   │       ├── static
-│   │   │       └── templates
-│   └── pom.xml
-└── docs
-    ├── Diagrama entidad Relacion.png
-    └── Diagramaclases.png
+# Compilar e iniciar
+./mvnw spring-boot:run
 ```
 
-## Base de Datos
+El backend estará disponible en `http://localhost:8080`
 
-La aplicación utiliza una base de datos en memoria H2. La consola de la base de datos está disponible en `http://localhost:8080/h2-console` con las siguientes propiedades:
+### Consola de H2 (en desarrollo)
+Disponible en `http://localhost:8080/h2-console`
 
-*   **Clase del Driver**: `org.h2.Driver`
-*   **URL JDBC**: `jdbc:h2:mem:hoteldb`
-*   **Nombre de Usuario**: `sa`
-*   **Contraseña**: 
+---
 
-## Diagrama ER
-
-![Diagrama de Entidad Relación](docs/Diagrama%20entidad%20Relacion.png)
-
-## Diagrama de Clases
-
-![Diagrama de Clases](docs/Diagramaclases.png)
-
-## Licencia
-
-Distribuido bajo la Licencia MIT. Consulta `LICENSE` para más información.
+## 🏗️ Arquitectura
