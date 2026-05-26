@@ -71,29 +71,18 @@ Disponible en `http://localhost:8080/h2-console`
 ---
 
 ## 🏗️ Arquitectura
-┌─────────────┐
-│  Frontend   │  Angular 16 (Vercel)
-└──────┬──────┘
-│ HTTP / JWT
-▼
-┌─────────────┐
-│ Controllers │  13 endpoints REST
-└──────┬──────┘
-│
-▼
-┌─────────────┐
-│  Services   │  Lógica de negocio
-└──────┬──────┘
-│
-▼
-┌─────────────┐
-│Repositories │  Spring Data JPA
-└──────┬──────┘
-│
-▼
-┌─────────────┐
-│  Database   │  H2
-└─────────────┘
+
+El proyecto sigue una arquitectura por capas:
+
+**Frontend (Angular 16 - Vercel)**
+⬇ HTTP / JWT
+**Controllers** — 13 endpoints REST
+⬇
+**Services** — Lógica de negocio
+⬇
+**Repositories** — Spring Data JPA
+⬇
+**Database** — H2
 ---
 
 ## 👥 Equipo
