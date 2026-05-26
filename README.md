@@ -72,18 +72,19 @@ Disponible en `http://localhost:8080/h2-console`
 
 ## 🏗️ Arquitectura
 
-El proyecto sigue una arquitectura por capas:
+​```mermaid
+graph TD
+    A[Frontend - Angular 16<br/>Vercel] -->|HTTP / JWT| B[Controllers<br/>13 REST endpoints]
+    B --> C[Services<br/>Lógica de negocio]
+    C --> D[Repositories<br/>Spring Data JPA]
+    D --> E[(Database<br/>H2)]
 
-**Frontend (Angular 16 - Vercel)**
-⬇ HTTP / JWT
-**Controllers** — 13 endpoints REST
-⬇
-**Services** — Lógica de negocio
-⬇
-**Repositories** — Spring Data JPA
-⬇
-**Database** — H2
----
+    style A fill:#DD0031,stroke:#fff,color:#fff
+    style B fill:#6DB33F,stroke:#fff,color:#fff
+    style C fill:#6DB33F,stroke:#fff,color:#fff
+    style D fill:#6DB33F,stroke:#fff,color:#fff
+    style E fill:#005C84,stroke:#fff,color:#fff
+​```
 
 ## 👥 Equipo
 
