@@ -17,17 +17,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Envia correos. Soporta dos backends:
- *   1. Brevo HTTPS API (si BREVO_API_KEY esta seteada). Usado en produccion porque
- *      Render Free bloquea SMTP saliente (puerto 587/465).
- *   2. SMTP via JavaMailSender (si MAIL_USERNAME esta seteado). Usado en dev local.
- *   3. Sin configurar: solo loguea el link (modo dev sin nada).
+ * Envia correos. Soporta tres backends:
+ *   1. SendGrid HTTPS API (si SENDGRID_API_KEY esta seteada). Para produccion en
+ *      Render porque su Free tier bloquea SMTP saliente (puerto 587/465).
+ *   2. SMTP via JavaMailSender (si MAIL_USERNAME esta seteado). Para dev local.
+ *   3. Sin configurar: solo loguea el link de fallback.
  */
 @Service
 public class EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
-    private static final String BREVO_URL = "https://api.brevo.com/v3/smtp/email";
+    private static final String SENDGRID_URL = "https://api.sendgrid.com/v3/mail/send";
 
     private final JavaMailSender mailSender;
     private final RestTemplate restTemplate = new RestTemplate();
@@ -38,14 +38,14 @@ public class EmailService {
     @Value("${spring.mail.username:}")
     private String fromEmail;
 
-    @Value("${brevo.api.key:}")
-    private String brevoApiKey;
+    @Value("${sendgrid.api.key:}")
+    private String sendgridApiKey;
 
-    @Value("${brevo.sender.email:}")
-    private String brevoSenderEmail;
+    @Value("${sendgrid.sender.email:}")
+    private String sendgridSenderEmail;
 
-    @Value("${brevo.sender.name:Hotel Praia}")
-    private String brevoSenderName;
+    @Value("${sendgrid.sender.name:Hotel Praia}")
+    private String sendgridSenderName;
 
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -65,15 +65,15 @@ public class EmailService {
 
     private void enviar(String destinatario, String nombre, String subject,
                         String htmlContent, String linkFallback, String tipo) {
-        // 1. Brevo HTTPS API (preferido en prod)
-        if (brevoApiKey != null && !brevoApiKey.isBlank()
-                && brevoSenderEmail != null && !brevoSenderEmail.isBlank()) {
+        // 1. SendGrid HTTPS API (preferido en prod)
+        if (sendgridApiKey != null && !sendgridApiKey.isBlank()
+                && sendgridSenderEmail != null && !sendgridSenderEmail.isBlank()) {
             try {
-                enviarPorBrevo(destinatario, nombre, subject, htmlContent);
-                log.info("Correo de {} enviado a {} via Brevo", tipo, destinatario);
+                enviarPorSendgrid(destinatario, nombre, subject, htmlContent);
+                log.info("Correo de {} enviado a {} via SendGrid", tipo, destinatario);
                 return;
             } catch (Exception e) {
-                log.error("Error enviando correo de {} a {} via Brevo: {}",
+                log.error("Error enviando correo de {} a {} via SendGrid: {}",
                           tipo, destinatario, e.getMessage());
                 log.warn("Link de {} (fallback): {}", tipo, linkFallback);
                 return;
@@ -101,21 +101,22 @@ public class EmailService {
         log.warn("=================================================================");
     }
 
-    private void enviarPorBrevo(String destinatario, String nombre, String subject, String html) {
+    private void enviarPorSendgrid(String destinatario, String nombre, String subject, String html) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("api-key", brevoApiKey);
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setBearerAuth(sendgridApiKey);
 
         Map<String, Object> body = Map.of(
-            "sender", Map.of("name", brevoSenderName, "email", brevoSenderEmail),
-            "to", List.of(Map.of("email", destinatario, "name", nombre == null ? "" : nombre)),
+            "personalizations", List.of(Map.of(
+                "to", List.of(Map.of("email", destinatario, "name", nombre == null ? "" : nombre))
+            )),
+            "from", Map.of("email", sendgridSenderEmail, "name", sendgridSenderName),
             "subject", subject,
-            "htmlContent", html
+            "content", List.of(Map.of("type", "text/html", "value", html))
         );
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
-        restTemplate.postForEntity(BREVO_URL, request, String.class);
+        restTemplate.postForEntity(SENDGRID_URL, request, String.class);
     }
 
     private void enviarPorSmtp(String destinatario, String subject, String html) throws Exception {
